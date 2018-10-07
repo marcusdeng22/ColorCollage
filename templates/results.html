@@ -10,14 +10,18 @@
 			height: 200px;
 		}
 	</style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 
 <body>
-
-    {% for url in urls %}
-        <img src={{ url }} class="cover">
-    {% endfor %}
-    
+	
+	{% for x in range(3) %}
+		<div class="row">
+		{% for y in range(3) %}
+			<img src={{ urls[(x*3)+y] }} class="cover" />
+		{% endfor %}
+		</div>
+	{% endfor %}
 
 </body>
 </html>
