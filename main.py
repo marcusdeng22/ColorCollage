@@ -26,7 +26,7 @@ from datetime import datetime
 marcus_path = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"
 victor_path = r"C:\Users\Victor Mao\Documents\ColorCollage-7afdc23cc638.json"
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = victor_path	#remove this
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = marcus_path	#remove this
 client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -38,33 +38,49 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 DOWNLOAD_FOLDER = os.path.basename('downloads')
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+
+app.config["TEMP_FILE"] = ""
 downloadFile = ""
+
+labelList = []
+colorList = []
+nameList = []
 
 @app.route('/')
 def hello():
+    print("hello")
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
-def upload_file():
-    try:
-        file = request.files['image']
-    except:
-        print("no file uploaded")
-        return render_template('index.html')
+def upload_file(swapLabel=None, swapColor=None, inFile=None):
+    print("upload")
+    if swapLabel is None and swapColor is None and inFile is None:
+        try:
+            file = request.files['image']
+        except:
+            print("no file uploaded")
+            return render_template('index.html')
 
-    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename.replace(" ", ""))
-    file.save(f)
+    if inFile is None:
+        f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename.replace(" ", ""))
+        file.save(f)
+        app.config["TEMP_FILE"] = f
+    else:
+        f = app.config["TEMP_FILE"]
     
     with io.open(f, 'rb') as image_file:
         content = image_file.read()
 
     image = types.Image(content=content)
 
-    labels = client.label_detection(image=image).label_annotations
     labelList = []
-    colors = client.image_properties(image=image).image_properties_annotation
     colorList = []
     nameList = []
+
+    labels = client.label_detection(image=image).label_annotations
+
+    colors = client.image_properties(image=image).image_properties_annotation
+
     print('Labels:')
     for label in labels:
         print(label.description)
@@ -90,6 +106,19 @@ def upload_file():
         print('color: {} pixels: {}   score: {} percentage: {} rev: {}'.format(color.color, color.pixel_fraction/sumPixels*100, color.score/sumScore*100, color.pixel_fraction/color.score, color.score/color.pixel_fraction))
     print(labelList)
     print(colorList)
+    print(nameList)
+    if swapLabel is not None:
+        i = labelList.index(swapLabel)
+        labelList[0], labelList[i] = labelList[i], labelList[0]
+    if swapColor is not None:
+        print("swapping")
+        i = nameList.index(swapColor)
+        print(i)
+        colorList[0], colorList[i] = colorList[i], colorList[0]
+        nameList[0], nameList[i] = nameList[i], nameList[0]
+    print(labelList)
+    print(colorList)
+    print(nameList)
     images = scraper.getUrls(labelList, colorList)
 
     images.insert(4, str(f))
@@ -112,6 +141,7 @@ def upload_file():
             tempImage = tempImage.crop(((width/2)-100, (height/2)-100, (width/2)+100, (height/2)+100))
             finalImage.paste(im=tempImage, box=(y*200, x*200))
     downloadFile = str(datetime.now()).replace(" ", "_").replace(".", "-").replace(":", "-") + ".jpg"
+    #app.config["TEMP_FILE"] = os.path.join(app.config['DOWNLOAD_FOLDER'], downloadFile)
     finalImage.save(os.path.join(app.config['DOWNLOAD_FOLDER'], downloadFile))
     print("created file: ", downloadFile)
     return render_template('results.html',
@@ -121,12 +151,33 @@ def upload_file():
                             colorNames = nameList,
                             filePath = downloadFile)
 
+@app.route('/value_select', methods=['GET', 'POST'])
+def search_label():
+    print("search labels")
+    #option = request.form["label"]
+    #print(option)
+    #options = request.form.getlist("label")
+    #print(options)
+    #opt = request.form.get("label")
+    #print(opt)
+    print(request.form)
+    print(request.form.get("labelBtn"))
+    print(request.form.get("colorBtn"))
+    if len(request.form.getlist("labelBtn")) > 0:
+        print("swapping labels")
+        return upload_file(swapLabel=request.form.get("labelBtn"), inFile=app.config["TEMP_FILE"])
+    print("swapping colors")
+    return upload_file(swapColor=request.form.get("colorBtn"), inFile=app.config["TEMP_FILE"])
+
 @app.route('/uploads/<filename>')
 def send_image(filename):
+    print("send image")
+    print(labelList)
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 @app.route('/downloads/<filename>', methods=['GET'])
 def download(filename):
+    print("download image")
     return send_file(os.path.join(app.config["DOWNLOAD_FOLDER"], filename), mimetype="image/jpg")
 
 if __name__ == '__main__':
