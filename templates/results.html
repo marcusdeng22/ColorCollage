@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ColorCollage - Results</title>
-  <!--<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/app.css') }}">-->
+	<meta charset="UTF-8">
+	<title>ColorCollage - Results</title>
+	<style>
+		.cover {
+			object-fit: cover;
+			width: 200px;
+			height: 200px;
+		}
+	</style>
 </head>
 
 <body>
 
-
     {% for url in urls %}
-        <img src={{ url }} height="200" width="200" >
+        <img src={{ url }} class="cover">
     {% endfor %}
     
 
