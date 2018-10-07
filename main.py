@@ -19,11 +19,14 @@ import io
 from google.cloud import vision
 from google.cloud.vision import types
 import scraper
+from urllib.request import urlopen
+from PIL import Image
+from datetime import datetime
 
 marcus_path = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"
 victor_path = r"C:\Users\Victor Mao\Documents\ColorCollage-7afdc23cc638.json"
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = victor_path	#remove this
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = marcus_path	#remove this
 client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -32,6 +35,9 @@ app = Flask(__name__)
 
 UPLOAD_FOLDER = os.path.basename('uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+DOWNLOAD_FOLDER = os.path.basename('downloads')
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 
 @app.route('/')
@@ -88,6 +94,24 @@ def upload_file():
     images.insert(4, str(f))
 
     print(images)
+
+    finalImage = Image.new("RGB", (600, 600))
+    for x in range(3):
+        for y in range(3):
+            if (x*3 + y == 4):
+                tempImage = Image.open(images[x*3 + y])
+            else:
+                tempImage = Image.open(urlopen(images[x*3 + y]))
+            width, height = tempImage.size
+            ratio = min(width, height) / 200
+            width /= ratio
+            height /= ratio
+            tempImage.thumbnail((width, height), Image.ANTIALIAS)
+            cropSize = 200
+            width, height = tempImage.size
+            tempImage = tempImage.crop(((width/2)-100, (height/2)-100, (width/2)+100, (height/2)+100))
+            finalImage.paste(im=tempImage, box=(y*200, x*200))
+    finalImage.save(os.path.join(app.config['DOWNLOAD_FOLDER'], str(datetime.now()).replace(" ", "_").replace(".", "-").replace(":", "-") + ".jpg"))
     return render_template('results.html',
                             urls = images)
 
