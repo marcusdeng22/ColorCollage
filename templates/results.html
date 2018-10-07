@@ -23,7 +23,8 @@
         .colorSelect input {
             text-align: left;
             display: inline;
-        }
+		}
+
 	</style>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
@@ -63,20 +64,42 @@
             <div class="labelSelect col-md-6 col-sm-6 col-xs-6">
                 <h3>Labels</h3>
                 <form name="label_select" action="/value_select" method="post">
-                    {% for lab in range(labels|length) %}
-                        <button class="btn btn-border" name="labelBtn" value="{{ labels[lab] }}">{{ labels[lab] }}</button>
-                    {% endfor %}
+					{% for lab in range(labels|length) %}
+						{% if lab == 0 %}
+							<button class="btn btn-light" name="labelBtn" value="{{ labels[lab] }}" disabled>{{ labels[lab] }}</button>
+						{% else %}
+							<button class="btn btn-outline-dark" name="labelBtn" value="{{ labels[lab] }}" onclick="loadingWheel()">{{ labels[lab] }}</button>
+						{% endif %}
+					{% endfor %}
                 </form>
             </div>
             <div class="colorSelect col-md-6 col-sm-6 col-xs-6">
                 <h3>Colors</h3>
-                <form name="color_select" action="/value_select" method="post">
-                    {% for col in range(colorNames|length) %}
-                        <button class="btn btn-border" name="colorBtn" value="{{ colorNames[col] }}">{{ colorNames[col] }}</button>
-                    {% endfor %}
+				<form name="color_select" action="/value_select" method="post">
+					{% for col in range(colorNames|length) %}
+						{% if col == 0 %}
+							<button class="btn btn-light" name="colorBtn" value="{{ colorNames[col] }}" disabled>{{ colorNames[col] }}</button>
+						{% else %}
+							<button class="btn btn-outline-dark" name="colorBtn" value="{{ colorNames[col] }}" onclick="loadingWheel()">{{ colorNames[col] }}</button>
+						{% endif %}
+          	        {% endfor %}
                 </form>
             </div>
-        </div>
+		</div>
+		
+		<!-- Preloader -->
+		<div id="preloader">
+			<div class="loader" id="loader-1"></div>
+		</div>
+		<!-- End Preloader -->
+
+		<script src="/static/js/jquery-min.js"></script>
+
+		<script type="text/javascript">
+			function loadingWheel() {
+				$('#preloader').fadeIn();
+			}
+		</script>
 
         <!--
         <div class="row mt-4 mb-5">

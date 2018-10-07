@@ -93,8 +93,12 @@ def upload_file(swapLabel=None, swapColor=None, inFile=None):
         #print(color)
         sumPixels += color.pixel_fraction
         sumScore += color.score
-        colorList.append((color.color.red, color.color.green, color.color.blue))
-        nameList.append(scraper.get_color_name(color.color.red, color.color.green, color.color.blue))
+
+        temp_name = scraper.get_color_name(color.color.red, color.color.green, color.color.blue)
+        if (temp_name not in nameList):
+            nameList.append(temp_name)
+            colorList.append((color.color.red, color.color.green, color.color.blue))
+        
         #print('fraction: {}'.format(color.pixel_fraction))
         #print('\tr: {}'.format(color.color.red))
         #print('\tg: {}'.format(color.color.green))
