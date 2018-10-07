@@ -26,7 +26,7 @@ from datetime import datetime
 marcus_path = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"
 victor_path = r"C:\Users\Victor Mao\Documents\ColorCollage-7afdc23cc638.json"
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = marcus_path	#remove this
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = victor_path	#remove this
 client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
