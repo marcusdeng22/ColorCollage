@@ -10,7 +10,7 @@
 			height: 200px;
 		}
 		body {
-			background-color: #f7e4f2 !important;
+			background-color: #fafafa !important;
 			text-align: center !important;
 		}
 	</style>
@@ -20,6 +20,17 @@
 <body>
 	
 	<div class="container mt-5">
+		<div class="row mb-3">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<h1>Color Collage</h1>
+				<p>
+					RBG: <em>{{ colors[0] }}</em><br>
+					Color: <em>{{ colorNames[0] }}</em><br>
+					Label: <em>{{ labels[0] }}</em>
+				</p>
+			</div>
+		</div>
+
 		{% for x in range(3) %}
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12">
@@ -30,7 +41,7 @@
 			</div>
 		{% endfor %}
 
-		<div class="row mt-3">
+		<div class="row mt-4 mb-5">
 			<div class="col-md-12 col-sm-12 col-xs-12">
 				<a href="/downloads/{{ filePath }}" class="btn btn-outline-dark btn-lg" download="{{ filePath }}">Download Image</a>
 				<a href="/" class="btn btn-outline-dark btn-lg">Make Another Collage</a>

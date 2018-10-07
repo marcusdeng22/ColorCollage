@@ -64,6 +64,7 @@ def upload_file():
     labelList = []
     colors = client.image_properties(image=image).image_properties_annotation
     colorList = []
+    nameList = []
     print('Labels:')
     for label in labels:
         print(label.description)
@@ -77,6 +78,7 @@ def upload_file():
         sumPixels += color.pixel_fraction
         sumScore += color.score
         colorList.append((color.color.red, color.color.green, color.color.blue))
+        nameList.append(scraper.get_color_name(color.color.red, color.color.green, color.color.blue))
         #print('fraction: {}'.format(color.pixel_fraction))
         #print('\tr: {}'.format(color.color.red))
         #print('\tg: {}'.format(color.color.green))
@@ -116,6 +118,7 @@ def upload_file():
                             urls = images,
                             labels = labelList,
                             colors = colorList,
+                            colorNames = nameList,
                             filePath = downloadFile)
 
 @app.route('/uploads/<filename>')
