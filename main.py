@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START gae_python37_app]
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, Response, send_file
 import os
 import io
 from google.cloud import vision
@@ -38,6 +38,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 DOWNLOAD_FOLDER = os.path.basename('downloads')
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+downloadFile = ""
 
 
 @app.route('/')
@@ -111,13 +112,20 @@ def upload_file():
             width, height = tempImage.size
             tempImage = tempImage.crop(((width/2)-100, (height/2)-100, (width/2)+100, (height/2)+100))
             finalImage.paste(im=tempImage, box=(y*200, x*200))
-    finalImage.save(os.path.join(app.config['DOWNLOAD_FOLDER'], str(datetime.now()).replace(" ", "_").replace(".", "-").replace(":", "-") + ".jpg"))
+    downloadFile = str(datetime.now()).replace(" ", "_").replace(".", "-").replace(":", "-") + ".jpg"
+    finalImage.save(os.path.join(app.config['DOWNLOAD_FOLDER'], downloadFile))
+    print("created file: ", downloadFile)
     return render_template('results.html',
-                            urls = images)
+                            urls = images, labels = labelList, colors = colorList, filePath = downloadFile)
 
 @app.route('/uploads/<filename>')
 def send_image(filename):
-    return send_from_directory("uploads", filename)
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
+@app.route('/downloads/<filename>', methods=['GET'])
+def download(filename):
+    #return send_from_directory(app.config["DOWNLOAD_FOLDER"], filename)
+    return send_file(os.path.join(app.config["DOWNLOAD_FOLDER"], filename), mimetype="image/jpg")
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
