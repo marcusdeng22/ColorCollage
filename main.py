@@ -18,8 +18,9 @@ import os
 import io
 from google.cloud import vision
 from google.cloud.vision import types
+import scraper
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"	#remove this
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"	#remove this
 client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -52,10 +53,13 @@ def upload_file():
     image = types.Image(content=content)
 
     labels = client.label_detection(image=image).label_annotations
+    labelList = []
     colors = client.image_properties(image=image).image_properties_annotation
+    colorList = []
     print('Labels:')
     for label in labels:
         print(label.description)
+        labelList.append(label.description)
     sumPixels = 0
     sumScore = 0
     print(colors)
@@ -64,6 +68,7 @@ def upload_file():
         #print(color)
         sumPixels += color.pixel_fraction
         sumScore += color.score
+        colorList.append((color.color.red, color.color.green, color.color.blue))
         #print('fraction: {}'.format(color.pixel_fraction))
         #print('\tr: {}'.format(color.color.red))
         #print('\tg: {}'.format(color.color.green))
@@ -73,6 +78,10 @@ def upload_file():
     print("sumScore: ", sumScore)
     for color in colors.dominant_colors.colors:
         print('color: {} pixels: {}   score: {} percentage: {} rev: {}'.format(color.color, color.pixel_fraction/sumPixels*100, color.score/sumScore*100, color.pixel_fraction/color.score, color.score/color.pixel_fraction))
+    print(labelList)
+    print(colorList)
+    images = scraper.getUrls(labelList, colorList)
+    print(images)
     return render_template('index.html')
 
 

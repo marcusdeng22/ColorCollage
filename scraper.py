@@ -14,23 +14,29 @@ def get_color_name(r, g, b):
         min_colors[(rd + gd + bd)] = name
     return min_colors[min(min_colors.keys())]
 
-def getUrls():
+def getUrls(labelArg, colorArg):
+    #print(sys.argv[1])
+    #print(sys.argv[2])
     # read arguments
-    labels = sys.argv[1]
+    #labels = sys.argv[1]
     #print(labels)
-    rgbs = sys.argv[2]
-    rgb = rgbs[0]
-    rgb = rgb.split(",")
+    #rgbs = sys.argv[2]
+    #print(rgbs)
+    #rgb = rgbs[0:5]
     #print(rgb)
+    #rgb = rgb.split("x")
+    #print(rgb)
+    labels = labelArg[0]
+    rgb = colorArg[0]
     
     color = get_color_name(int(rgb[0]), int(rgb[1]), int(rgb[2]))
     #print(color)
 
     # construct url
-    quote_page = 'https://unsplash.com/search/photos/' + color + "-" + str(labels[0])
+    quote_page = 'https://unsplash.com/search/photos/' + color + "-" + str(labels)
     print(quote_page)
 
-    # query the website and return the html to the variable ‘page’
+    # query the website and return the html to the variable 'page'
     page = urllib.request.urlopen(quote_page)
 
     # parse the html using beautiful soup and store in variable `soup`
@@ -48,4 +54,5 @@ def getUrls():
     return urls
 
 if __name__ == "__main__":
+    print("scrapper")
     getUrls()
