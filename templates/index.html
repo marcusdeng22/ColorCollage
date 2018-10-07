@@ -3,22 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <title>ColorCollage - Upload</title>
-  <!--<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/app.css') }}">-->
+  <style>
+	body, html {
+		height: 100%;
+		margin: 0;
+	}
+	.bg { 
+		background: url(/static/background.jpg) no-repeat center center fixed;
+		height: 100%;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		-webkit-filter: blur(5px);
+		-moz-filter: blur(5px);
+		-o-filter: blur(5px);
+		-ms-filter: blur(5px);
+		filter: blur(5px);
+	}
+  </style>
 </head>
 
 <body>
+	<div class="bg"></div>
+
 <header class="navbar">
   <form action="/upload" method="post" enctype="multipart/form-data" >
       <span class="btn btn-default btn-file">
-        Browse <input type="file" name="image">
+        <input type="file" name="image">
       </span>
 
     <input type="submit" value="Upload your image" class="btn btn-primary">
   </form>
 
-  <span class="navbar-text"> Image moderation with
-      <a href="https://sightengine.com/">Sightengine</a>
-  </span>
 </header>
 
 </body>
