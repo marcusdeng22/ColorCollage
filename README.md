@@ -22,7 +22,7 @@ Using the python library 'pillow', the 9 images are stitched together into a col
 
 Users can choose different themes and colors to render a different collage.
 
-## Trivia
+## Facts
 
 **Programming Languages:** Python, HTML, CSS, JS
 
