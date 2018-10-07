@@ -45,13 +45,12 @@
               <em>high quality, Instagram ready, stock-photos</em>
             </p>
             <div class="form">
-                <form action="/upload" method="post" enctype="multipart/form-data" >
+                <form id="pic-upload" action="/upload" method="post" enctype="multipart/form-data" >
                   <label class="btn btn-common btn-file">
                       <input type="file" name="image" accept="image/*">
                   </label>
-            
-                <input type="submit" value="Create Collage" class="btn btn-border">
               </form>
+              <button class="btn btn-border" onclick="validateForm()">Create Collage</button>
             </div>
             
             <div class="social mt-5">
@@ -104,6 +103,27 @@
               { src: "/static/img/slide3.jpg" }
           ]
       });
+    </script>
+
+    <script type="text/javascript">
+      function validateForm(){
+      var isValid = true;
+
+      var elements = document.getElementById('pic-upload').getElementsByTagName('input');
+
+      for(var i=0; i < elements.length; i++){
+        if(elements[i].value.length < 1){
+          isValid = false;
+        }
+      }
+
+      if(isValid){
+        document.getElementById('pic-upload').submit();
+      }
+      else {
+        alert('Please upload an image file.');
+      }
+    }
     </script>
       
   </body>
