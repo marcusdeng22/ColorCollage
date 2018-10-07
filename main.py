@@ -26,7 +26,7 @@ from datetime import datetime
 marcus_path = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"
 victor_path = r"C:\Users\Victor Mao\Documents\ColorCollage-7afdc23cc638.json"
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = marcus_path	#remove this
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = victor_path	#remove this
 client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -40,10 +40,8 @@ DOWNLOAD_FOLDER = os.path.basename('downloads')
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 downloadFile = ""
 
-
 @app.route('/')
 def hello():
-    """Return a friendly HTTP greeting."""
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
@@ -55,7 +53,6 @@ def upload_file():
         return render_template('index.html')
 
     f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename.replace(" ", ""))
-
     file.save(f)
     
     with io.open(f, 'rb') as image_file:
@@ -94,7 +91,6 @@ def upload_file():
     images = scraper.getUrls(labelList, colorList)
 
     images.insert(4, str(f))
-
     print(images)
 
     finalImage = Image.new("RGB", (600, 600))
@@ -117,7 +113,10 @@ def upload_file():
     finalImage.save(os.path.join(app.config['DOWNLOAD_FOLDER'], downloadFile))
     print("created file: ", downloadFile)
     return render_template('results.html',
-                            urls = images, labels = labelList, colors = colorList, filePath = downloadFile)
+                            urls = images,
+                            labels = labelList,
+                            colors = colorList,
+                            filePath = downloadFile)
 
 @app.route('/uploads/<filename>')
 def send_image(filename):
@@ -125,7 +124,6 @@ def send_image(filename):
 
 @app.route('/downloads/<filename>', methods=['GET'])
 def download(filename):
-    #return send_from_directory(app.config["DOWNLOAD_FOLDER"], filename)
     return send_file(os.path.join(app.config["DOWNLOAD_FOLDER"], filename), mimetype="image/jpg")
 
 if __name__ == '__main__':
