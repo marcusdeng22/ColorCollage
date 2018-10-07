@@ -13,18 +13,67 @@
 # limitations under the License.
 
 # [START gae_python37_app]
-from flask import Flask
+from flask import Flask, render_template, request
+import os
+import io
+from google.cloud import vision
+from google.cloud.vision import types
 
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"	#remove this
+client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__)
 
+UPLOAD_FOLDER = os.path.basename('uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/')
 def hello():
     """Return a friendly HTTP greeting."""
-    return 'Hi Marcus!'
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    file = request.files['image']
+    if file == None:
+        print("no file uploaded")
+        return render_template('index.html')
+
+    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+
+    file.save(f)
+    
+    with io.open(f, 'rb') as image_file:
+        content = image_file.read()
+
+    image = types.Image(content=content)
+
+    labels = client.label_detection(image=image).label_annotations
+    colors = client.image_properties(image=image).image_properties_annotation
+    print('Labels:')
+    for label in labels:
+        print(label.description)
+    sumPixels = 0
+    sumScore = 0
+    print(colors)
+    print('Colors:')
+    for color in colors.dominant_colors.colors:
+        #print(color)
+        sumPixels += color.pixel_fraction
+        sumScore += color.score
+        #print('fraction: {}'.format(color.pixel_fraction))
+        #print('\tr: {}'.format(color.color.red))
+        #print('\tg: {}'.format(color.color.green))
+        #print('\tb: {}'.format(color.color.blue))
+        #print('\ta: {}'.format(color.color.alpha))
+    print("sumPixels: ", sumPixels)
+    print("sumScore: ", sumScore)
+    for color in colors.dominant_colors.colors:
+        print('color: {} pixels: {}   score: {} percentage: {} rev: {}'.format(color.color, color.pixel_fraction/sumPixels*100, color.score/sumScore*100, color.pixel_fraction/color.score, color.score/color.pixel_fraction))
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
