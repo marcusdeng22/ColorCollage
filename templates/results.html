@@ -7,17 +7,11 @@
 </head>
 
 <body>
-    <ul>
-    {% for url in urls %}
-        <li>{{ url.name }}</li>
-    {% endfor %}
-    </ul>
+
 
     {% for url in urls %}
-        <img src={{ url.name }} height="500" width="500" >
+        <img src={{ url }} height="200" width="200" >
     {% endfor %}
-
-
     
 
 </body>

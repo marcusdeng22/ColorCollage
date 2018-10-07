@@ -13,14 +13,17 @@
 # limitations under the License.
 
 # [START gae_python37_app]
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import os
 import io
 from google.cloud import vision
 from google.cloud.vision import types
 import scraper
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"	#remove this
+marcus_path = r"C:\Users\Marcus\Documents\ColorCollage-e1e555b3681d.json"
+victor_path = r"C:\Users\Victor Mao\Documents\ColorCollage-7afdc23cc638.json"
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = victor_path	#remove this
 client = vision.ImageAnnotatorClient()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -43,7 +46,7 @@ def upload_file():
         print("no file uploaded")
         return render_template('index.html')
 
-    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    f = os.path.join(app.config['UPLOAD_FOLDER'], file.filename.replace(" ", ""))
 
     file.save(f)
     
@@ -81,9 +84,16 @@ def upload_file():
     print(labelList)
     print(colorList)
     images = scraper.getUrls(labelList, colorList)
-    print(images)
-    return render_template('index.html')
 
+    images.insert(4, str(f))
+
+    print(images)
+    return render_template('results.html',
+                            urls = images)
+
+@app.route('/uploads/<filename>')
+def send_image(filename):
+    return send_from_directory("uploads", filename)
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App

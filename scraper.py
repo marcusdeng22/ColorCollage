@@ -50,7 +50,7 @@ def getUrls(labelArg, colorArg):
         src = image['src']
         urls.append(src)
 
-    print(urls)
+    #print(urls)
     return urls
 
 if __name__ == "__main__":
