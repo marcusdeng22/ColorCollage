@@ -1,42 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>ColorCollage - Upload</title>
-  <style>
-	body, html {
-		height: 100%;
-		margin: 0;
-	}
-	.bg { 
-		background: url(/static/background.jpg) no-repeat center center fixed;
-		height: 100%;
-		-webkit-background-size: cover;
-		-moz-background-size: cover;
-		-o-background-size: cover;
-		background-size: cover;
-		-webkit-filter: blur(5px);
-		-moz-filter: blur(5px);
-		-o-filter: blur(5px);
-		-ms-filter: blur(5px);
-		filter: blur(5px);
-	}
-  </style>
-</head>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<body>
-	<div class="bg"></div>
+    <title>ColorCollage - Upload</title>
 
-<header class="navbar">
-  <form action="/upload" method="post" enctype="multipart/form-data" >
-      <span class="btn btn-default btn-file">
-        <input type="file" name="image">
-      </span>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" >
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="assets/fonts/line-icons.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" type="text/css" href="assets/css/slicknav.css">
+    <!-- Off Canvas Menu -->
+    <link rel="stylesheet" type="text/css" href="assets/css/menu_sideslide.css">
+    <!-- Color Switcher -->
+    <link rel="stylesheet" type="text/css" href="assets/css/vegas.min.css">
+    <!-- Animate -->
+    <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+    <!-- Responsive Style -->
+    <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
 
-    <input type="submit" value="Upload your image" class="btn btn-primary">
-  </form>
+  </head>
+  <body>
 
-</header>
+    <div class="bg-wraper overlay has-vignette">
+      <div id="example" class="slider opacity-50 vegas-container" style="height: 983px;"></div>
+    </div>
 
-</body>
+    <!-- Coundown Section Start -->
+    <section class="countdown-timer">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="heading-count">
+              <h2>COLOR COLLAGE</h2>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <p class="mb-5">
+              <em>high quality, Instagram ready, stock-photos</em>
+            </p>
+            <div class="form">
+                <form action="/upload" method="post" enctype="multipart/form-data" >
+                  <label class="btn btn-common btn-file">
+                      <input type="file" name="image" accept="image/*">
+                  </label>
+            
+                <input type="submit" value="Create Collage" class="btn btn-border">
+              </form>
+            </div>
+            
+            <div class="social mt-5">
+                Marcus Deng<br>
+                <a class="github" href="https://github.com/marcusdeng22/" target="_blank"><i class="lni-github"></i></a>
+                <a class="linkedin" href="https://www.linkedin.com/in/marcus-deng22/" target="_blank"><i class="lni-linkedin-filled"></i></a>
+                <a class="email" href="mailto:marcus.deng.2@gmail.com" target="_blank"><i class="lni-envelope"></i></a>
+              </div>
+
+            <div class="social mt-3">
+              Victor Mao<br>
+              <a class="github" href="https://github.com/vmao19/" target="_blank"><i class="lni-github"></i></a>
+              <a class="linkedin" href="https://www.linkedin.com/in/victor-mao/" target="_blank"><i class="lni-linkedin-filled"></i></a>
+              <a class="email" href="mailto:Victor.Mao@utdallas.edu" target="_blank"><i class="lni-envelope"></i></a>
+              <a class="website" href="https://vmao19.github.io/vmao19/" target="_blank"><i class="lni-home"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Coundown Section End -->
+
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="assets/js/jquery-min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/vegas.min.js"></script>
+    <script src="assets/js/classie.js"></script>
+    <script src="assets/js/jquery.nav.js"></script>
+    <script src="assets/js/jquery.easing.min.js"></script> 
+    <script src="assets/js/wow.js"></script>
+    <script src="assets/js/jquery.slicknav.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/form-validator.min.js"></script>
+
+    <script type="text/javascript">
+      $("#example").vegas({
+          timer: false,
+          delay: 6000,
+          transitionDuration: 2000,
+          transition: "blur",
+          slides: [
+              { src: "assets/img/slide1.jpg" },
+              { src: "assets/img/slide2.jpg" },
+              { src: "assets/img/slide3.jpg" }
+          ]
+      });
+    </script>
+      
+  </body>
 </html>
