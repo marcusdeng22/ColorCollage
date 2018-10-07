@@ -1,1 +1,5 @@
 Flask==1.0.2
+webcolors==1.8.1
+google-cloud-vision==0.34.0
+Pillow==5.3.0
+beautifulsoup4==4.6.3
