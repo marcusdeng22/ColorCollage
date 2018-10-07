@@ -48,8 +48,9 @@ def hello():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    file = request.files['image']
-    if file == None:
+    try:
+        file = request.files['image']
+    except:
         print("no file uploaded")
         return render_template('index.html')
 
